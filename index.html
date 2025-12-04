@@ -4,12 +4,75 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sehr gute Website</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+    canvas#rainbow-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      display: block;
+    }
+    .content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      color: #fff;
+      text-shadow: 1px 1px 10px #000;
+    }
+  </style>
 </head>
 <body>
-  <h1>Warum Markus Söder eigentlich die beste Doktorarbeit hatte!</h1>
-  <p>Markus Söder mag Wurst.</p>
-  <p>Markus Söder mag Bayern. Bayern ist das BESTE Bundesland!!!</p>
-  <p>Markus Söder ist schlau! Sehr gutes Abi hat er!</p>
-  <p>Er ist fast so gut wie Olaf!</p>
+  <canvas id="rainbow-bg"></canvas>
+  <div class="content">
+    <h1>Warum Markus Söder eigentlich die beste Doktorarbeit hatte!</h1>
+    <p>Markus Söder mag Wurst.</p>
+    <p>Markus Söder mag Bayern. Bayern ist das BESTE Bundesland!!!</p>
+    <p>Markus Söder ist schlau! Sehr gutes Abi hat er!</p>
+    <p>Er ist fast so gut wie Olaf!</p>
+  </div>
+  <script>
+    const canvas = document.getElementById('rainbow-bg');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    function drawRainbow(offset) {
+      const width = canvas.width;
+      const height = canvas.height;
+      const gradient = ctx.createLinearGradient(0, 0, width, 0);
+
+      for (let i = 0; i <= 1; i += 0.1) {
+        const hue = (offset + i * 360) % 360;
+        gradient.addColorStop(i, `hsl(${hue}, 100%, 50%)`);
+      }
+
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, width, height);
+    }
+
+    function animate() {
+      const time = Date.now() * 0.025;
+      drawRainbow(time);
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
 </body>
 </html>
