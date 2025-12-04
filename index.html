@@ -53,6 +53,68 @@
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
+    // ---------------------------------------------------
+    // Figur Parameter
+    let figure = {
+      x: 50,
+      y: 100,
+      radius: 30,
+      vx: 2
+    };
+
+    function drawFigure(x, y, r) {
+      // Body (circle)
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, 2 * Math.PI);
+      ctx.fillStyle = "yellow";
+      ctx.shadowColor = "#fff";
+      ctx.shadowBlur = 15;
+      ctx.fill();
+      ctx.beginPath(); // Outline
+      ctx.arc(x, y, r, 0, 2 * Math.PI);
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Eyes
+      ctx.beginPath();
+      ctx.arc(x - r/3, y - r/6, r/7, 0, 2*Math.PI);
+      ctx.arc(x + r/3, y - r/6, r/7, 0, 2*Math.PI);
+      ctx.fillStyle = "#222";
+      ctx.fill();
+
+      // Smile
+      ctx.beginPath();
+      ctx.arc(x, y + r/6, r/4, 0.2*Math.PI, 0.8*Math.PI);
+      ctx.strokeStyle = "#222";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Feet
+      ctx.beginPath();
+      ctx.moveTo(x - r/2, y + r);
+      ctx.lineTo(x - r/2 + 5, y + r + 20);
+      ctx.moveTo(x + r/2, y + r);
+      ctx.lineTo(x + r/2 - 5, y + r + 20);
+      ctx.strokeStyle = "#a45";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Arms
+      ctx.beginPath();
+      ctx.moveTo(x - r - 5, y + r/4);
+      ctx.lineTo(x - r - 25, y - r/2);
+      ctx.moveTo(x + r + 5, y + r/4);
+      ctx.lineTo(x + r + 25, y - r/2);
+      ctx.strokeStyle = "#a45";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    // ----------------------------------------------------
     function drawRainbow(offset) {
       const width = canvas.width;
       const height = canvas.height;
@@ -70,6 +132,18 @@
     function animate() {
       const time = Date.now() * 0.025;
       drawRainbow(time);
+
+      // Update figure position
+      figure.x += figure.vx;
+      // Bounce off right edge, reset to left
+      if (figure.x > canvas.width - figure.radius) {
+        figure.x = figure.radius;
+      }
+      // Optional: bounce bottom/top
+      figure.y = Math.min(Math.max(100, canvas.height-150), canvas.height-figure.radius-30);
+
+      drawFigure(figure.x, figure.y, figure.radius);
+
       requestAnimationFrame(animate);
     }
     animate();
